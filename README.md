@@ -3,7 +3,7 @@
 ## 분석 기간 : 21.05.20~21.06.14
 ## 분석 업무 : Wordcloud, Sentiment Analysis, Phi Coefficient Analysis, LDA Topic modeling
 
-### 선정 데이터 및 선정 이유 : 민식이법
+### Ⅰ. 선정 데이터 및 선정 이유 : 민식이법
 
 ![image](https://github.com/shinho123/-Text-Mining-Project---Analysis-of-Min-Sik-Law-Articles-Data/assets/105840783/f12cacb7-89d5-430b-b032-6b44f8ed8ebd)
 
@@ -13,7 +13,7 @@
   
 * 하지만 민식이 법에 대해서 **정당한 법안이다** 라고 생각하는 사람도 있지만 일각에서는 **처벌이 너무 과하다**라는 비판들도 적지않게 보여지고 있다. 따라서 민식이 법에 관한 기사들을 추출하여 **텍스트 마이닝**을 통해 여론의 흐름과 법의 정당성에 대해 분석하고자 한다.
 
-### Wordcloud
+### Ⅱ. Wordcloud
 
 ```R
 font_add_google(name = "Black Han Sans", family = "bhs")
@@ -36,7 +36,7 @@ text_count %>%
 
 * "어린이보호구역", ‚"스쿨존", ‚"민식이법", ‚"어린이", "초등학교" 등의 단어 빈도가 다른 단어에 비해 상대적으로 높게 추출되어 워드클라우드 형태로 출력되고 있다.
 
-### Sentiment Analysis
+### Ⅲ. Sentiment Analysis
 
 ```R
 Min_score_count %>%
@@ -63,7 +63,7 @@ Min_score_count %>%
   * 또한 뚫린 도로가 아니라 반대편 차선에 신호 대기중이던 차량이 늘어서 있던 바람에 횡단보도를 건너는 아이를 놓쳤던것이다.
   * 이 부분을 여전히 많은 사람들이 찬반논쟁을 벌이고 있는 상황이다.
 
-### Phi Coefficient
+### Ⅳ. Phi Coefficient
 
 ```R
 top_cors %>%
@@ -96,7 +96,7 @@ top_cors %>%
 
   * 인천 : 인천과 관계가 큰 단어를 확인해보면 "화물차", "초등학생", "숨지다"등이 존재하며 다른 단어들과의 상관관계를 분석하여 유추해볼 경우 인천 중구 신흥동 부근에서 화물 운전자가 어린이 보호 구역에서 초등학생을 쳐 숨지게 함으로써 민식이 사건과 동일하게 운전자는 특별범죄 가중처벌법상 위반으로 중부경찰서로 입건이 된 것을 알 수 있다.
 
-### Phi Coefficient & N-gram Network Analysis
+### Ⅴ. Phi Coefficient Network Analysis
 
 ```R
 ggraph(graph_cors,
@@ -125,9 +125,9 @@ ggraph(graph_cors,
   
   * 하지만 법이 강화됨에도 불구하고 인천시 중구 신흥동에서 민식이 사건와 유사한 사고가 발생한 것을 볼때 여전히 어린이 보호구역에서 안전사고 위험에 노출이 많이 되어있음을 알 수 있다.
 
-### LDA Topic modeling Analysis
+### Ⅵ. LDA Topic modeling Analysis
 
-#### Extracting Key Words for Each Topic using LDA
+#### Ⅵ-ⅰ. Extracting Key Words for Each Topic using LDA
 
 ```R
 count_topic_word %>%
@@ -153,6 +153,9 @@ count_topic_word %>%
         plot.title = element_text(size = 14, face = "bold"),
         plot.subtitle = element_text(size = 1))
 ```
+
+![image](https://github.com/shinho123/-Text-Mining-Project---Analysis-of-Min-Sik-Law-Articles-Data/assets/105840783/c72a3a5f-f65c-4d71-849b-3689e8620f49)
+
 * Topic 1. : **초등학교**, 경찰, 신흥동, **사망**, 인근, **어린이보호구역(스쿨존)**
 * Topic 2. : 기자, **횡단보도**, **운전자**, 앵커, 보도, 오전
 * Topic 3. : **스쿨**, 발생, 들이, 이후, 초등학교, **아이들**
@@ -162,4 +165,52 @@ count_topic_word %>%
 * Topic 7. : 인천, 초등학생, **화물차**, 혐의, **치사**, 오후
 * Topic 8. : **안전**, **교통안전**, **학교**, 시설, 행정, 광주
 
+#### Ⅵ-ⅱ. Word Frequency Graph through LDA-based Topic Modeling
 
+```R
+top_term_topic_name %>%
+  ggplot(aes(x = reorder_within(term, beta, name),
+             y = beta,
+             fill = factor(topic))) +
+  geom_col(show.legend = F) +
+  facet_wrap(~ name, scales = "free", ncol = 4) +
+  coord_flip() +
+  scale_x_reordered() +
+  labs(title = "민식이법 기사 토픽",
+       subtitle = "토픽별 주요 단어 Top10",
+       x = NULL,
+       y = NULL) +
+  theme_minimal() +
+  theme(text = element_text(family = "bhs"),
+        plot.title = element_text(size = 14, face = "bold"),
+        plot.subtitle = element_text(size = 12),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+![image](https://github.com/shinho123/-Text-Mining-Project---Analysis-of-Min-Sik-Law-Articles-Data/assets/105840783/1ea6fb00-c5d3-41e0-b1ea-a36a5416dfb3)
+
+![image](https://github.com/shinho123/-Text-Mining-Project---Analysis-of-Min-Sik-Law-Articles-Data/assets/105840783/e7aac9c6-a533-4782-ba0f-29b5b129ebdb)
+
+* 앞서 도출한 토픽별 단어와 실제 언급된 단어가 속한 문서들을 종합하여 각 토픽별 네이밍을 수행
+  * Topic 1. : "민식이 법 사건의 발단"
+  * Topic 2. : "50대 남성이 몰던 차에 깔려 30대 어머니 사망‚
+  * Topic 3. : "어린이보호구역(스쿨존) 내 교통사고 위험에 대한 경각심이 높아지고 있음"
+  * Topic 4. : "여전히 해결되지 않는 어린이 구역 안전사고"
+  * Topic 5. : "사건이나 사고의 피해자 이름과 관련된 법"
+  * Topic 6. : "도로교통법에 대한 규제 강화"
+  * Topic 7. : "민식이 법, 특정범죄 가중처벌 적용"
+  * Topic 8. : "국가차원의 어린이 구역 산재예방과 교통안전 강화"
+
+Ⅶ. 결론
+
+* 민식이 법에 관한 뉴스 기사와 R Programming 프로그램에서 지원하는 기능을 통해 다양한 기법들로 분석을 수행
+
+* 사용된 분석 기법은 "감정분석(Sentiment Analysis)"‚ "워드클라우드(Wordcloud)", "막대 그래프 출력", "파이계수 네트워크 그래프(Phy Correlation Graph)", "LDA 모델 기반의 토픽모델링(Topic Modeling)"등이 사용됨
+
+* 프로그램에서 토픽별로 확률이 가장 높은 단어를 추출해 맊든 토픽들과 사용자가 직접 문서들을 분석해 명명한 토픽 이름들에서 약간의 차이가 존재함 하지만 대부분은 유사했으며, 직접문서들을 읽고 주요 단어들을 찾아내며 토픽별 이름을 부여해보면서 데이터를 분석하는 능력을 함양할 수 있는 계기가 되었고 분석 과정 중 민식이 법이 가진 장·단점들도 함께 파악할 수 있었음
+
+* 민식이 법은 분명 초기에는 많은 사람들의 공감과 지지를 얻으며 성공적으로 제정되었으나 이후 법에 대한 과잉처벌, 법 제정 자체에 대한 모순점 등의 이유로 점차 사람들의 인식이 부정적으로 바뀌었으며, 아직까지도 현재 진행형임
+* 분명 민식이 법의 제정의도는 좋으나 법에 대핚 처벌 정도나 민식이 법과 유사핚 여러 어린이 교통 안전법에 대한 개선이 필요할 것으로 사료됨
+
+* 수업에서 배운 다양한 텍스트 마이닝 기법들은 뉴스 뿐 아니라 경제 데이터의 지표 분석, 주식 및 증권 분석등에도 활용할 수 있다면 수 많은 기업에서 편리함과 시각화 뿐 아니라 미래에 경제에 대한 부가가치 창출도 충분히 기대할 수 있음
