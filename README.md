@@ -15,4 +15,50 @@
 
 ### Wordcloud
 
+```R
+font_add_google(name = "Black Han Sans", family = "bhs")
+showtext_auto()
+
+text_count %>%
+  ggplot(aes(label = word, 
+             size = n,
+             col = n)) +
+  geom_text_wordcloud(seed = 1234,
+                      family = "bhs") +
+  scale_radius(limits = c(20, NA),
+               range = c(3, 30)) +
+  scale_colour_gradient(low = "#66aaf2",
+                        high = "#00FF00") +
+  theme_minimal()
+```
+
 ![image](https://github.com/shinho123/-Text-Mining-Project---Analysis-of-Min-Sik-Law-Articles-Data/assets/105840783/d1c581c4-3f80-4f75-8f1c-9d52b7d1ae96)
+
+* "어린이보호구역", ‚"스쿨존", ‚"민식이법", ‚"어린이", "초등학교" 등의 단어 빈도가 다른 단어에 비해 상대적으로 높게 추출되어 워드클라우드 형태로 출력되고 있다.
+
+### Sentiment Analysis
+
+```R
+Min_score_count %>%
+  ggplot(aes(dummy, ratio, fill = sentiment)) +
+  geom_col() +
+  geom_text(aes(label = paste0(round(ratio, 1), "%", "(", n, ")")),
+            position = position_stack(vjust = 0.5),
+            family = "bhs") +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        text = element_text(family = "bhs", size = 15)) +
+  labs(title = "민식이 법 감정분석", y = NULL) 
+```
+
+![image](https://github.com/shinho123/-Text-Mining-Project---Analysis-of-Min-Sik-Law-Articles-Data/assets/105840783/c8f1cc53-0b77-452f-97e9-2d557ddd4053)
+
+#### 결과
+  * 중립을 유지 중인 뉴스 기사들이 44.7%로 가장 많은 비중을 차지하고 있다.
+  * 그 다음으로 32.4%로 부정적인 경향을 띠는 뉴스기사가 존재하고, 긍정적인 뉴스 기사는 22.9%로 가장 적은 비중을 차지하고 있다.
+#### 분석
+  * 민식군의 사고 이후 민식이법이 국회를 통과한 당시에는 여론이 긍정적인 방향으로 흘러 갔으나 이후 과잉처벌과 민식이 법의 모순점 등으로 부정적인 여론쪽으로 흘러 갔을 것으로 생각된다.
+  * 최초 알려짂 것과는 달리 가해 운전자는 스쿨존의 제한속도인 30km보다 낮은 속도인 23km였던 것으로 확인되었다.
+  * 또한 뚫린 도로가 아니라 반대편 차선에 신호 대기중이던 차량이 늘어서 있던 바람에 횡단보도를 건너는 아이를 놓쳤던것이다.
+  * 이 부분을 여전히 많은 사람들이 찬반논쟁을 벌이고 있는 상황이다.
